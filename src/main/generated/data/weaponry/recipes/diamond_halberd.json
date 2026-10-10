@@ -10,9 +10,9 @@
     }
   },
   "pattern": [
-    "MM ",
-    "MS ",
-    "  S"
+    "MMM",
+    " S ",
+    "S  "
   ],
   "result": {
     "item": "weaponry:diamond_halberd"
