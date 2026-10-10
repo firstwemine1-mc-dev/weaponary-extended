@@ -3,12 +3,12 @@ package net.firstwemine1.weaponry.datagen;
 import java.util.concurrent.CompletableFuture;
 
 import net.firstwemine1.weaponry.item.ModItems;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 import net.minecraft.core.HolderLookup;
 
 public class WeaponLanguageProvider extends FabricLanguageProvider {
-	public WeaponLanguageProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+	public WeaponLanguageProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		super(output, registries);
 	}
 

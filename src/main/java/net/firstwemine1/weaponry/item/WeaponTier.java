@@ -1,42 +1,27 @@
 package net.firstwemine1.weaponry.item;
 
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ToolMaterial;
 
 /**
- * A vanilla tier with durability scaled for one weapon type. {@code TieredItem} takes durability
- * from the tier, so scaling it here is how each weapon gets its own durability.
+ * A vanilla tool material with durability scaled for one weapon type. Durability is an item
+ * component set from the tier, so scaling it here is how each weapon gets its own durability.
  */
-public record WeaponTier(Tier base, float durabilityMultiplier) implements Tier {
-	@Override
+public record WeaponTier(ToolMaterial base, float durabilityMultiplier) {
 	public int getUses() {
-		return Math.max(1, (int) (base.getUses() * durabilityMultiplier));
+		return Math.max(1, (int) (base.durability() * durabilityMultiplier));
 	}
 
-	@Override
-	public float getSpeed() {
-		return base.getSpeed();
-	}
-
-	@Override
 	public float getAttackDamageBonus() {
-		return base.getAttackDamageBonus();
+		return base.attackDamageBonus();
 	}
 
-	@Override
-	public TagKey<Block> getIncorrectBlocksForDrops() {
-		return base.getIncorrectBlocksForDrops();
-	}
-
-	@Override
 	public int getEnchantmentValue() {
-		return base.getEnchantmentValue();
+		return base.enchantmentValue();
 	}
 
-	@Override
-	public Ingredient getRepairIngredient() {
-		return base.getRepairIngredient();
+	public TagKey<Item> getRepairItems() {
+		return base.repairItems();
 	}
 }

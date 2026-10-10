@@ -1,7 +1,7 @@
 package net.firstwemine1.weaponry.item;
 
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -21,7 +21,7 @@ public interface WeaponAbility {
 	}
 
 	/** Right-click. Return {@code pass} to fall through to vanilla behaviour. */
-	default InteractionResultHolder<ItemStack> onUse(Level level, Player player, InteractionHand hand) {
-		return InteractionResultHolder.pass(player.getItemInHand(hand));
+	default InteractionResult onUse(Level level, Player player, InteractionHand hand) {
+		return InteractionResult.PASS;
 	}
 }

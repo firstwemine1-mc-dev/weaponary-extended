@@ -4,7 +4,7 @@ import net.firstwemine1.weaponry.item.ModItems;
 import net.firstwemine1.weaponry.testing.TestChest;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -14,8 +14,8 @@ public class Weaponry implements ModInitializer {
 
 	private static WeaponryConfig config;
 
-	public static ResourceLocation id(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+	public static Identifier id(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 
 	public static WeaponryConfig config() {

@@ -35,8 +35,8 @@ public final class TestChest {
 	}
 
 	public static void placeOrRefill(MinecraftServer server) {
-		ServerLevel level = server.overworld();
-		BlockPos spawn = level.getSharedSpawnPos();
+		ServerLevel level = server.findRespawnDimension();
+		BlockPos spawn = level.getRespawnData().pos();
 		int x = spawn.getX() + OFFSET_EAST;
 		int z = spawn.getZ();
 
@@ -58,7 +58,7 @@ public final class TestChest {
 
 	/** Our chest from an earlier launch, so restarts refill it instead of stacking new ones. */
 	private static BlockPos findExisting(ServerLevel level, int x, int z) {
-		for (int y = level.getMaxBuildHeight() - 1; y >= level.getMinBuildHeight(); y--) {
+		for (int y = level.getMaxY(); y >= level.getMinY(); y--) {
 			BlockPos pos = new BlockPos(x, y, z);
 			if (level.getBlockEntity(pos) instanceof ChestBlockEntity chest
 					&& chest.getCustomName() != null && NAME.equals(chest.getCustomName().getString())) {
