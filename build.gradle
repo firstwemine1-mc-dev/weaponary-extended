@@ -22,6 +22,12 @@ loom {
 	}
 }
 
+fabricApi {
+	// Generates models, lang, recipes and tags from WeaponType/WeaponMaterial into src/main/generated.
+	// Run with: ./gradlew runDatagen
+	configureDataGeneration()
+}
+
 dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"

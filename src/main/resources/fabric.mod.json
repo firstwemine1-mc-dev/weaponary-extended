@@ -16,6 +16,9 @@
 		],
 		"client": [
 			"net.firstwemine1.weaponry.client.WeaponryClient"
+		],
+		"fabric-datagen": [
+			"net.firstwemine1.weaponry.datagen.WeaponryDataGenerator"
 		]
 	},
 	"depends": {
