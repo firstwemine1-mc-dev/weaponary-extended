@@ -1,10 +1,10 @@
 # Weaponry
 
-Fabric mod for Minecraft **1.20.1** (Java 17, Mojang mappings). It adds 10 melee weapons in
+Fabric mod for Minecraft **1.19.2** (Java 17, Mojang mappings). It adds 10 melee weapons in
 5 material tiers, for 50 items in total. This first pass covers base stats only; abilities come later.
 
 Built from the official [fabric-example-mod](https://github.com/FabricMC/fabric-example-mod)
-template (`1.20.1` branch). A pristine copy of that template lives at `../fabric-example-mod`.
+template (`1.19.2` branch). A pristine copy of that template lives at `../fabric-example-mod`.
 Ported from the 1.21.1 version; see [Version notes](#version-notes).
 
 ## Side
@@ -30,7 +30,7 @@ synced to the client, so the mod can't be client-only, and a vanilla client can'
 Tiers are wooden, stone, iron, golden and diamond. Damage bonus, enchantability, repair item and base
 durability all come from the vanilla tier. Source: `../pixel-art/weaponry/docs/weapon-stats.md`.
 
-\* Recorded in `WeaponType`, but not enforced yet. Reach is not applied on 1.20.1 (see [Version notes](#version-notes)).
+\* Recorded in `WeaponType`, but not enforced yet. Reach is not applied on 1.19.2 (see [Version notes](#version-notes)).
 
 ## Recipes (M = material, S = stick)
 
@@ -49,7 +49,7 @@ S        .M.      .M.       .S.      .SM      MM.      MS.      MS       MSM    
 - `item/WeaponItem` is the single item class. It behaves like a sword without the sweep attack.
 - `mixin/WeaponEnchantmentCategoryMixin` lets weapons take sword enchantments (see [Version notes](#version-notes)).
 - `item/WeaponAbility` is the hook point for future abilities. Every weapon uses `NONE` for now.
-- `datagen/` generates models, lang, recipes and the decorated-pot tag into `src/main/generated`.
+- `datagen/` generates models, lang and recipes into `src/main/generated`.
 - Textures in `assets/weaponry/textures/item` are copied from `../pixel-art/weaponry/png/<tier>/` (render with `python render.py weaponry` there; `warhammer.png` → `<tier>_war_hammer.png`, `gold/` → `golden_`).
 
 ## Testing
@@ -91,6 +91,10 @@ Differences from the 1.21.1 version:
   Sweeping edge can be applied but does nothing, as on 1.21.1.
 - **Durability per block** is handled in `WeaponItem.mineBlock` (2 per block, like a sword) instead of the
   `tool` component.
-- **Data:** recipes in `data/weaponry/recipes` with `result.item`, tags in `tags/items`. Only
-  `minecraft:breaks_decorated_pots` is tagged; the `enchantable/*` tags don't exist yet.
-- `new ResourceLocation(...)`, and the test chest is named with `setCustomName`.
+- **Creative tab:** built with `FabricItemGroupBuilder`, and items join it through
+  `Item.Properties.tab`. Its translation key is `itemGroup.weaponry.weapons`.
+- **Data:** recipes in `data/weaponry/recipes` with `result.item` and no recipe category. No item tags:
+  the `enchantable/*` tags and `breaks_decorated_pots` don't exist yet, so there is no tag provider.
+  The datagen providers use the older `FabricDataGenerator` constructors.
+- `Registry.ITEM` instead of `BuiltInRegistries`, `new ResourceLocation(...)`, and the test chest is
+  named with `setCustomName`.
