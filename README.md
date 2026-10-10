@@ -1,10 +1,10 @@
 # Weaponry
 
-Fabric mod for Minecraft **26.1.2** (Java 25, unobfuscated). It adds 10 melee weapons in
+Fabric mod for Minecraft **26.2** (Java 25, unobfuscated). It adds 10 melee weapons in
 5 material tiers, for 50 items in total. This first pass covers base stats only; abilities come later.
 
 Built from the official [fabric-example-mod](https://github.com/FabricMC/fabric-example-mod)
-template (`26.1.2` branch). A pristine copy of that template lives at `../fabric-example-mod`.
+template (`26.2` branch). A pristine copy of that template lives at `../fabric-example-mod`.
 
 ## Side
 
@@ -74,9 +74,9 @@ Commands: `/give @s weaponry:<material>_<weapon>`, e.g. `weaponry:iron_war_hamme
 ./gradlew build        # jar in build/libs
 ```
 
-## Version notes (26.1.2)
+## Version notes (26.2)
 
-Ported from the 1.21.1 baseline. Stats, recipes (except the spear), tiers, reach, the creative tab, the
+Ported from the 1.21.1 baseline (via 26.1.2). Stats, recipes (except the spear), tiers, reach, the creative tab, the
 config and the test chest are unchanged.
 
 - **Build:** Minecraft 26.x ships unobfuscated: `net.fabricmc.fabric-loom` without a `mappings` line,
@@ -95,3 +95,5 @@ config and the test chest are unchanged.
   (`..M / .SM / S..`). Our spear is a plain melee weapon, not vanilla's charge/jab spear.
 - **Test chest:** placed next to the world respawn point, in the respawn dimension.
 - Attribute ids in commands have no `generic.` prefix (`minecraft:attack_damage`, `minecraft:entity_interaction_range`).
+- **26.1.2 -> 26.2:** no gameplay change. Only datagen code moved: advancement criteria are in
+  `net.minecraft.advancements.triggers`, and item tags are appended by registry key.
