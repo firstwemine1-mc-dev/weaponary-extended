@@ -1,17 +1,15 @@
 package net.firstwemine1.weaponry.datagen;
 
-import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 import net.firstwemine1.weaponry.item.ModItems;
 import net.firstwemine1.weaponry.item.WeaponItem;
 import net.firstwemine1.weaponry.item.WeaponType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -24,12 +22,12 @@ import net.minecraft.world.item.crafting.Ingredient;
  * and each other (vanilla shaped recipes also match mirrored, which was checked too).
  */
 public class WeaponRecipeProvider extends FabricRecipeProvider {
-	public WeaponRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-		super(output, registries);
+	public WeaponRecipeProvider(FabricDataOutput output) {
+		super(output);
 	}
 
 	@Override
-	public void buildRecipes(RecipeOutput output) {
+	public void buildRecipes(Consumer<FinishedRecipe> output) {
 		for (WeaponItem item : ModItems.all()) {
 			ShapedRecipeBuilder builder = ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, item);
 			for (String row : pattern(item)) {
@@ -58,7 +56,7 @@ public class WeaponRecipeProvider extends FabricRecipeProvider {
 		};
 	}
 
-	private record MaterialInput(Ingredient ingredient, String criterionName, Criterion<InventoryChangeTrigger.TriggerInstance> criterion) {
+	private record MaterialInput(Ingredient ingredient, String criterionName, InventoryChangeTrigger.TriggerInstance criterion) {
 		static MaterialInput of(TagKey<Item> tag, String name) {
 			return new MaterialInput(Ingredient.of(tag), "has_" + name, has(tag));
 		}

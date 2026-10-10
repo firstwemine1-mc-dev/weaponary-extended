@@ -1,9 +1,7 @@
 package net.firstwemine1.weaponry.item;
 
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
 
 /**
  * A vanilla tier with durability scaled for one weapon type. {@code TieredItem} takes durability
@@ -26,8 +24,8 @@ public record WeaponTier(Tier base, float durabilityMultiplier) implements Tier 
 	}
 
 	@Override
-	public TagKey<Block> getIncorrectBlocksForDrops() {
-		return base.getIncorrectBlocksForDrops();
+	public int getLevel() {
+		return base.getLevel();
 	}
 
 	@Override

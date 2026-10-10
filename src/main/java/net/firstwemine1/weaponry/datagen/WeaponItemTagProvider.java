@@ -10,7 +10,10 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
-/** Vanilla tags that make weapons enchantable and behave like melee weapons. */
+/**
+ * Vanilla tags that make weapons behave like melee weapons. Enchanting isn't tag-based before 1.21;
+ * see {@code WeaponEnchantmentCategoryMixin}.
+ */
 public class WeaponItemTagProvider extends FabricTagProvider.ItemTagProvider {
 	public WeaponItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		super(output, registries);
@@ -18,11 +21,6 @@ public class WeaponItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
 	@Override
 	protected void addTags(HolderLookup.Provider registries) {
-		addAll(ItemTags.SWORD_ENCHANTABLE);
-		addAll(ItemTags.SHARP_WEAPON_ENCHANTABLE);
-		addAll(ItemTags.WEAPON_ENCHANTABLE);
-		addAll(ItemTags.FIRE_ASPECT_ENCHANTABLE);
-		addAll(ItemTags.DURABILITY_ENCHANTABLE);
 		addAll(ItemTags.BREAKS_DECORATED_POTS);
 	}
 

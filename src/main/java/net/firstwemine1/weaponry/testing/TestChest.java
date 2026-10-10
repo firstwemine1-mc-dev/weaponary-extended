@@ -7,13 +7,11 @@ import net.firstwemine1.weaponry.item.ModItems;
 import net.firstwemine1.weaponry.item.WeaponItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
@@ -84,11 +82,9 @@ public final class TestChest {
 		level.setBlock(leftPos, left, Block.UPDATE_ALL);
 		level.setBlock(rightPos, right, Block.UPDATE_ALL);
 
-		ItemStack named = new ItemStack(Items.CHEST);
-		named.set(DataComponents.CUSTOM_NAME, Component.literal(NAME));
 		for (BlockPos pos : List.of(leftPos, rightPos)) {
 			if (level.getBlockEntity(pos) instanceof ChestBlockEntity chest) {
-				chest.applyComponentsFromItemStack(named);
+				chest.setCustomName(Component.literal(NAME));
 				chest.setChanged();
 			}
 		}
