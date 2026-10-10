@@ -8,7 +8,7 @@ import net.firstwemine1.weaponry.item.WeaponType;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -59,7 +59,8 @@ public class WeaponRecipeProvider extends FabricRecipeProvider {
 			case DAGGER -> new String[] {"M", "S"};
 			case SABRE -> new String[] {"  M", " M ", "S  "};
 			case SCIMITAR -> new String[] {" MM", " M ", "S  "};
-			case SPEAR -> new String[] {"  M", " S ", "S  "};
+			// Vanilla 1.21.11 spears use the old diagonal "  M / S / S  " shape, so ours is narrower.
+			case SPEAR -> new String[] {" M", " S", "S "};
 			case PIKE -> new String[] {" MM", " SM", "S  "};
 			case LANCE -> new String[] {"  M", "MM ", "S  "};
 			case HALBERD -> new String[] {"MM ", "MS ", "  S"};

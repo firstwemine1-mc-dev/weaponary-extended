@@ -18,7 +18,8 @@ public class WeaponItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
 	@Override
 	protected void addTags(HolderLookup.Provider registries) {
-		addAll(ItemTags.SWORD_ENCHANTABLE);
+		// The old enchantable/sword tag is split; melee_weapon is its non-sweep half (knockback, looting, ...).
+		addAll(ItemTags.MELEE_WEAPON_ENCHANTABLE);
 		addAll(ItemTags.SHARP_WEAPON_ENCHANTABLE);
 		addAll(ItemTags.WEAPON_ENCHANTABLE);
 		addAll(ItemTags.FIRE_ASPECT_ENCHANTABLE);
@@ -27,7 +28,7 @@ public class WeaponItemTagProvider extends FabricTagProvider.ItemTagProvider {
 	}
 
 	private void addAll(TagKey<Item> tag) {
-		var builder = getOrCreateTagBuilder(tag);
+		var builder = valueLookupBuilder(tag);
 		ModItems.all().forEach(builder::add);
 	}
 }

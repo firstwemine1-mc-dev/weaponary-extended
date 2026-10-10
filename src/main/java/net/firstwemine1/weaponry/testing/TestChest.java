@@ -36,7 +36,7 @@ public final class TestChest {
 
 	public static void placeOrRefill(MinecraftServer server) {
 		ServerLevel level = server.overworld();
-		BlockPos spawn = level.getSharedSpawnPos();
+		BlockPos spawn = level.getRespawnData().pos();
 		int x = spawn.getX() + OFFSET_EAST;
 		int z = spawn.getZ();
 

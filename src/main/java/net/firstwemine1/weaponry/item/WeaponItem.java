@@ -3,12 +3,10 @@ package net.firstwemine1.weaponry.item;
 import java.util.List;
 
 import net.firstwemine1.weaponry.Weaponry;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -18,8 +16,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.item.component.Weapon;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * A melee weapon: one {@link WeaponType} in one {@link WeaponMaterial}. Behaves like a sword minus
@@ -30,9 +28,14 @@ public class WeaponItem extends Item {
 	private static final int SWORD_BASE_DAMAGE = 3;
 	private static final float PLAYER_BASE_ATTACK_SPEED = 4.0f;
 	private static final double PLAYER_BASE_REACH = 3.0;
-	private static final ResourceLocation REACH_MODIFIER_ID = Weaponry.id("weapon_reach");
-	/** Not a tool: no fast-mined blocks, and breaking a block costs 2 durability, like a sword. */
-	private static final Tool TOOL = new Tool(List.of(), 1.0f, 2);
+	private static final Identifier REACH_MODIFIER_ID = Weaponry.id("weapon_reach");
+	/**
+	 * Not a tool: no fast-mined blocks, breaking a block costs 2 durability, and it can't break
+	 * blocks in creative, like a sword.
+	 */
+	private static final Tool TOOL = new Tool(List.of(), 1.0f, 2, false);
+	/** Marks the item as a weapon: each hit costs 1 durability, like a sword. */
+	private static final Weapon WEAPON = new Weapon(1);
 
 	private final WeaponType type;
 	private final WeaponMaterial material;
@@ -44,7 +47,8 @@ public class WeaponItem extends Item {
 	private WeaponItem(WeaponType type, WeaponMaterial material, WeaponTier tier, Properties properties) {
 		super(tier.applyCommonProperties(properties)
 				.attributes(createAttributes(type, tier))
-				.component(DataComponents.TOOL, TOOL));
+				.component(DataComponents.TOOL, TOOL)
+				.component(DataComponents.WEAPON, WEAPON));
 		this.type = type;
 		this.material = material;
 	}
@@ -77,25 +81,12 @@ public class WeaponItem extends Item {
 		return material;
 	}
 
-	// --- sword-like durability handling ---
-
-	@Override
-	public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
-		return !player.isCreative();
-	}
-
-	@Override
-	public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-		type.ability().onHit(stack, target, attacker);
-		return true;
-	}
-
-	@Override
-	public void postHurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
-		stack.hurtAndBreak(1, attacker, EquipmentSlot.MAINHAND);
-	}
-
 	// --- ability hooks ---
+
+	@Override
+	public void hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+		type.ability().onHit(stack, target, attacker);
+	}
 
 	@Override
 	public InteractionResult use(Level level, Player player, InteractionHand hand) {
