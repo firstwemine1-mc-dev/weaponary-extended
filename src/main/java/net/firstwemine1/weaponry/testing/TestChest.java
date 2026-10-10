@@ -1,5 +1,6 @@
 package net.firstwemine1.weaponry.testing;
 
+import java.util.Arrays;
 import java.util.List;
 
 import net.firstwemine1.weaponry.Weaponry;
@@ -12,9 +13,9 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ChestBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.ChestType;
@@ -28,6 +29,8 @@ import net.minecraft.world.level.levelgen.Heightmap;
 public final class TestChest {
 	private static final String NAME = "Weaponry Test Chest";
 	private static final int OFFSET_EAST = 2;
+	/** UPDATE_ALL in later versions: notify neighbours and send to clients. */
+	private static final int UPDATE_ALL = 3;
 
 	private TestChest() {
 	}
@@ -56,10 +59,11 @@ public final class TestChest {
 
 	/** Our chest from an earlier launch, so restarts refill it instead of stacking new ones. */
 	private static BlockPos findExisting(ServerLevel level, int x, int z) {
-		for (int y = level.getMaxBuildHeight() - 1; y >= level.getMinBuildHeight(); y--) {
+		for (int y = level.getMaxBuildHeight() - 1; y >= 0; y--) {
 			BlockPos pos = new BlockPos(x, y, z);
-			if (level.getBlockEntity(pos) instanceof ChestBlockEntity chest
-					&& chest.getCustomName() != null && NAME.equals(chest.getCustomName().getString())) {
+			BlockEntity blockEntity = level.getBlockEntity(pos);
+			if (blockEntity instanceof ChestBlockEntity && ((ChestBlockEntity) blockEntity).getCustomName() != null
+					&& NAME.equals(((ChestBlockEntity) blockEntity).getCustomName().getString())) {
 				return pos;
 			}
 		}
@@ -79,13 +83,14 @@ public final class TestChest {
 				level.getHeight(Heightmap.Types.WORLD_SURFACE, x + toRight.getStepX(), z + toRight.getStepZ()));
 		BlockPos leftPos = new BlockPos(x, y, z);
 		BlockPos rightPos = leftPos.relative(toRight);
-		level.setBlock(leftPos, left, Block.UPDATE_ALL);
-		level.setBlock(rightPos, right, Block.UPDATE_ALL);
+		level.setBlock(leftPos, left, UPDATE_ALL);
+		level.setBlock(rightPos, right, UPDATE_ALL);
 
-		for (BlockPos pos : List.of(leftPos, rightPos)) {
-			if (level.getBlockEntity(pos) instanceof ChestBlockEntity chest) {
-				chest.setCustomName(new TextComponent(NAME));
-				chest.setChanged();
+		for (BlockPos pos : Arrays.asList(leftPos, rightPos)) {
+			BlockEntity blockEntity = level.getBlockEntity(pos);
+			if (blockEntity instanceof ChestBlockEntity) {
+				((ChestBlockEntity) blockEntity).setCustomName(new TextComponent(NAME));
+				blockEntity.setChanged();
 			}
 		}
 		return leftPos;

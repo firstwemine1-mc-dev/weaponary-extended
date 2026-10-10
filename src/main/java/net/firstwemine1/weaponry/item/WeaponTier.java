@@ -5,9 +5,26 @@ import net.minecraft.world.item.crafting.Ingredient;
 
 /**
  * A vanilla tier with durability scaled for one weapon type. {@code TieredItem} takes durability
- * from the tier, so scaling it here is how each weapon gets its own durability.
+ * from the tier, so scaling it here is how each weapon gets its own durability. (A class rather than
+ * a record: this version targets Java 8.)
  */
-public record WeaponTier(Tier base, float durabilityMultiplier) implements Tier {
+public final class WeaponTier implements Tier {
+	private final Tier base;
+	private final float durabilityMultiplier;
+
+	public WeaponTier(Tier base, float durabilityMultiplier) {
+		this.base = base;
+		this.durabilityMultiplier = durabilityMultiplier;
+	}
+
+	public Tier base() {
+		return base;
+	}
+
+	public float durabilityMultiplier() {
+		return durabilityMultiplier;
+	}
+
 	@Override
 	public int getUses() {
 		return Math.max(1, (int) (base.getUses() * durabilityMultiplier));
