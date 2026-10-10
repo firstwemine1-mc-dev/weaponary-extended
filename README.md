@@ -1,10 +1,10 @@
 # Weaponry
 
-Fabric mod for Minecraft **1.19.2** (Java 17, Mojang mappings). It adds 10 melee weapons in
+Fabric mod for Minecraft **1.18.2** (Java 17, Mojang mappings). It adds 10 melee weapons in
 5 material tiers, for 50 items in total. This first pass covers base stats only; abilities come later.
 
 Built from the official [fabric-example-mod](https://github.com/FabricMC/fabric-example-mod)
-template (`1.19.2` branch). A pristine copy of that template lives at `../fabric-example-mod`.
+template (`1.18.2` branch). A pristine copy of that template lives at `../fabric-example-mod`.
 Ported from the 1.21.1 version; see [Version notes](#version-notes).
 
 ## Side
@@ -30,7 +30,7 @@ synced to the client, so the mod can't be client-only, and a vanilla client can'
 Tiers are wooden, stone, iron, golden and diamond. Damage bonus, enchantability, repair item and base
 durability all come from the vanilla tier. Source: `../pixel-art/weaponry/docs/weapon-stats.md`.
 
-\* Recorded in `WeaponType`, but not enforced yet. Reach is not applied on 1.19.2 (see [Version notes](#version-notes)).
+\* Recorded in `WeaponType`, but not enforced yet. Reach is not applied on 1.18.2 (see [Version notes](#version-notes)).
 
 ## Recipes (M = material, S = stick)
 
@@ -97,4 +97,4 @@ Differences from the 1.21.1 version:
   the `enchantable/*` tags and `breaks_decorated_pots` don't exist yet, so there is no tag provider.
   The datagen providers use the older `FabricDataGenerator` constructors.
 - `Registry.ITEM` instead of `BuiltInRegistries`, `new ResourceLocation(...)`, and the test chest is
-  named with `setCustomName`.
+  named with `setCustomName(new TextComponent(...))` (`Component.literal` came in 1.19).
