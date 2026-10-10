@@ -28,6 +28,5 @@
     "recipes": [
       "weaponry:wooden_pike"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

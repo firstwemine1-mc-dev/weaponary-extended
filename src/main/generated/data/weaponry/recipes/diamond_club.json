@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "equipment",
   "key": {
     "M": {
       "item": "minecraft:diamond"
@@ -15,6 +14,5 @@
   ],
   "result": {
     "item": "weaponry:diamond_club"
-  },
-  "show_notification": true
+  }
 }

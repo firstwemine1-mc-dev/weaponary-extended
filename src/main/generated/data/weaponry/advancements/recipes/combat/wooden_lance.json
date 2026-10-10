@@ -28,6 +28,5 @@
     "recipes": [
       "weaponry:wooden_lance"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

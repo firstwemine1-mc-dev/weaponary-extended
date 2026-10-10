@@ -1,12 +1,12 @@
 package net.firstwemine1.weaponry.datagen;
 
 import net.firstwemine1.weaponry.item.ModItems;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLanguageProvider;
 
 public class WeaponLanguageProvider extends FabricLanguageProvider {
-	public WeaponLanguageProvider(FabricDataOutput output) {
-		super(output);
+	public WeaponLanguageProvider(FabricDataGenerator generator) {
+		super(generator);
 	}
 
 	@Override

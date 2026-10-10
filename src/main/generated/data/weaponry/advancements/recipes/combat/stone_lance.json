@@ -28,6 +28,5 @@
     "recipes": [
       "weaponry:stone_lance"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

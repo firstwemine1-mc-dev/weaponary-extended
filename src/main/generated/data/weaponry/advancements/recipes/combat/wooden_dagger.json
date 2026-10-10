@@ -28,6 +28,5 @@
     "recipes": [
       "weaponry:wooden_dagger"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

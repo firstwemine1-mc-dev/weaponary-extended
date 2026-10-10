@@ -30,6 +30,5 @@
     "recipes": [
       "weaponry:golden_pike"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

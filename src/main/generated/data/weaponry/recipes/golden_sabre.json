@@ -1,6 +1,5 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "equipment",
   "key": {
     "M": {
       "item": "minecraft:gold_ingot"
@@ -16,6 +15,5 @@
   ],
   "result": {
     "item": "weaponry:golden_sabre"
-  },
-  "show_notification": true
+  }
 }

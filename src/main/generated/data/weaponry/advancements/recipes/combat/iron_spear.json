@@ -30,6 +30,5 @@
     "recipes": [
       "weaponry:iron_spear"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

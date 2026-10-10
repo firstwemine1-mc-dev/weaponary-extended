@@ -28,6 +28,5 @@
     "recipes": [
       "weaponry:stone_hatchet"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

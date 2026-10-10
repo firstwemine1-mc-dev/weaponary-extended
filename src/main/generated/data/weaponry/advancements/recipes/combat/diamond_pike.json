@@ -30,6 +30,5 @@
     "recipes": [
       "weaponry:diamond_pike"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

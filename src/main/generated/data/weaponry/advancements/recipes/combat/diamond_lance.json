@@ -30,6 +30,5 @@
     "recipes": [
       "weaponry:diamond_lance"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

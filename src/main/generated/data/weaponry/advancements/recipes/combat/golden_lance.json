@@ -30,6 +30,5 @@
     "recipes": [
       "weaponry:golden_lance"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

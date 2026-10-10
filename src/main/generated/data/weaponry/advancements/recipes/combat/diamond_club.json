@@ -30,6 +30,5 @@
     "recipes": [
       "weaponry:diamond_club"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

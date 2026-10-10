@@ -30,6 +30,5 @@
     "recipes": [
       "weaponry:diamond_hatchet"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

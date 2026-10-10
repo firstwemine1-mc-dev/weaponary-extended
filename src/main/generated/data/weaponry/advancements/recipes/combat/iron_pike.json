@@ -30,6 +30,5 @@
     "recipes": [
       "weaponry:iron_pike"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }

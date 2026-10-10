@@ -5,11 +5,10 @@ import java.util.function.Consumer;
 import net.firstwemine1.weaponry.item.ModItems;
 import net.firstwemine1.weaponry.item.WeaponItem;
 import net.firstwemine1.weaponry.item.WeaponType;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.data.recipes.FinishedRecipe;
-import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -22,14 +21,14 @@ import net.minecraft.world.item.crafting.Ingredient;
  * and each other (vanilla shaped recipes also match mirrored, which was checked too).
  */
 public class WeaponRecipeProvider extends FabricRecipeProvider {
-	public WeaponRecipeProvider(FabricDataOutput output) {
-		super(output);
+	public WeaponRecipeProvider(FabricDataGenerator generator) {
+		super(generator);
 	}
 
 	@Override
-	public void buildRecipes(Consumer<FinishedRecipe> output) {
+	protected void generateRecipes(Consumer<FinishedRecipe> output) {
 		for (WeaponItem item : ModItems.all()) {
-			ShapedRecipeBuilder builder = ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, item);
+			ShapedRecipeBuilder builder = ShapedRecipeBuilder.shaped(item);
 			for (String row : pattern(item)) {
 				builder.pattern(row);
 			}
