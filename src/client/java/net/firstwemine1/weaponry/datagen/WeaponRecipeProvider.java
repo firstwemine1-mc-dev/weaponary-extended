@@ -62,7 +62,7 @@ public class WeaponRecipeProvider extends FabricRecipeProvider {
 			case SPEAR -> new String[] {"  M", " S ", "S  "};
 			case PIKE -> new String[] {" MM", " SM", "S  "};
 			case LANCE -> new String[] {"  M", "MM ", "S  "};
-			case HALBERD -> new String[] {"MM ", "MS ", "  S"};
+			case HALBERD -> new String[] {"MMM", " S ", "S  "};
 			case HATCHET -> new String[] {"MM", "MS"};
 			case WAR_HAMMER -> new String[] {"MMM", "MSM", " S "};
 			case CLUB -> new String[] {" M", "S "};
