@@ -28,7 +28,7 @@ public class WeaponItemTagProvider extends FabricTagsProvider.ItemTagsProvider {
 	}
 
 	private void addAll(TagKey<Item> tag) {
-		var builder = valueLookupBuilder(tag);
-		ModItems.all().forEach(builder::add);
+		var builder = builder(tag);
+		ModItems.all().forEach(item -> builder.add(item.builtInRegistryHolder().key()));
 	}
 }
