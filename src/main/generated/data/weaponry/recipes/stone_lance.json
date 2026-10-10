@@ -1,5 +1,10 @@
 {
   "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  M",
+    "MM ",
+    "S  "
+  ],
   "key": {
     "M": {
       "tag": "minecraft:stone_tool_materials"
@@ -8,11 +13,6 @@
       "item": "minecraft:stick"
     }
   },
-  "pattern": [
-    "  M",
-    "MM ",
-    "S  "
-  ],
   "result": {
     "item": "weaponry:stone_lance"
   }

@@ -1,5 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "M",
+    "S"
+  ],
   "key": {
     "M": {
       "tag": "minecraft:stone_tool_materials"
@@ -8,10 +12,6 @@
       "item": "minecraft:stick"
     }
   },
-  "pattern": [
-    "M",
-    "S"
-  ],
   "result": {
     "item": "weaponry:stone_dagger"
   }

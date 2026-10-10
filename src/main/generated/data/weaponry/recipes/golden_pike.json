@@ -1,5 +1,10 @@
 {
   "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " MM",
+    " SM",
+    "S  "
+  ],
   "key": {
     "M": {
       "item": "minecraft:gold_ingot"
@@ -8,11 +13,6 @@
       "item": "minecraft:stick"
     }
   },
-  "pattern": [
-    " MM",
-    " SM",
-    "S  "
-  ],
   "result": {
     "item": "weaponry:golden_pike"
   }

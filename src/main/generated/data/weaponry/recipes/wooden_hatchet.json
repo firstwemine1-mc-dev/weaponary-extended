@@ -1,5 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MM",
+    "MS"
+  ],
   "key": {
     "M": {
       "tag": "minecraft:planks"
@@ -8,10 +12,6 @@
       "item": "minecraft:stick"
     }
   },
-  "pattern": [
-    "MM",
-    "MS"
-  ],
   "result": {
     "item": "weaponry:wooden_hatchet"
   }

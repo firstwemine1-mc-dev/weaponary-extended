@@ -1,5 +1,10 @@
 {
   "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "MMM",
+    " S ",
+    "S  "
+  ],
   "key": {
     "M": {
       "item": "minecraft:iron_ingot"
@@ -8,11 +13,6 @@
       "item": "minecraft:stick"
     }
   },
-  "pattern": [
-    "MMM",
-    " S ",
-    "S  "
-  ],
   "result": {
     "item": "weaponry:iron_halberd"
   }

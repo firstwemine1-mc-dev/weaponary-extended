@@ -7,7 +7,7 @@ import net.firstwemine1.weaponry.item.ModItems;
 import net.firstwemine1.weaponry.item.WeaponItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextComponent;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
@@ -84,7 +84,7 @@ public final class TestChest {
 
 		for (BlockPos pos : List.of(leftPos, rightPos)) {
 			if (level.getBlockEntity(pos) instanceof ChestBlockEntity chest) {
-				chest.setCustomName(Component.literal(NAME));
+				chest.setCustomName(new TextComponent(NAME));
 				chest.setChanged();
 			}
 		}
