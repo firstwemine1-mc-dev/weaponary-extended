@@ -59,8 +59,8 @@ public class WeaponRecipeProvider extends FabricRecipeProvider {
 			case DAGGER -> new String[] {"M", "S"};
 			case SABRE -> new String[] {"  M", " M ", "S  "};
 			case SCIMITAR -> new String[] {" MM", " M ", "S  "};
-			// Vanilla 1.21.11 spears use the old diagonal "  M / S / S  " shape, so ours is narrower.
-			case SPEAR -> new String[] {" M", " S", "S "};
+			// Vanilla 1.21.11 spears use the plain diagonal (..M / .S. / S..), so ours adds a second M.
+			case SPEAR -> new String[] {"  M", " SM", "S  "};
 			case PIKE -> new String[] {" MM", " SM", "S  "};
 			case LANCE -> new String[] {"  M", "MM ", "S  "};
 			case HALBERD -> new String[] {"MMM", " S ", "S  "};
