@@ -1,10 +1,10 @@
 # Weaponry
 
-Fabric mod for Minecraft **1.18.2** (Java 17, Mojang mappings). It adds 10 melee weapons in
+Fabric mod for Minecraft **1.16.5** (Java 8, Mojang mappings). It adds 10 melee weapons in
 5 material tiers, for 50 items in total. This first pass covers base stats only; abilities come later.
 
 Built from the official [fabric-example-mod](https://github.com/FabricMC/fabric-example-mod)
-template (`1.18.2` branch). A pristine copy of that template lives at `../fabric-example-mod`.
+template (`1.16.5` branch). A pristine copy of that template lives at `../fabric-example-mod`.
 Ported from the 1.21.1 version; see [Version notes](#version-notes).
 
 ## Side
@@ -30,7 +30,7 @@ synced to the client, so the mod can't be client-only, and a vanilla client can'
 Tiers are wooden, stone, iron, golden and diamond. Damage bonus, enchantability, repair item and base
 durability all come from the vanilla tier. Source: `../pixel-art/weaponry/docs/weapon-stats.md`.
 
-\* Recorded in `WeaponType`, but not enforced yet. Reach is not applied on 1.18.2 (see [Version notes](#version-notes)).
+\* Recorded in `WeaponType`, but not enforced yet. Reach is not applied on 1.16.5 (see [Version notes](#version-notes)).
 
 ## Recipes (M = material, S = stick)
 
@@ -49,7 +49,8 @@ S        .M.      .M.       .S.      .SM      MM.      .S.      MS       MSM    
 - `item/WeaponItem` is the single item class. It behaves like a sword without the sweep attack.
 - `mixin/WeaponEnchantmentCategoryMixin` lets weapons take sword enchantments (see [Version notes](#version-notes)).
 - `item/WeaponAbility` is the hook point for future abilities. Every weapon uses `NONE` for now.
-- `datagen/` generates models, lang and recipes into `src/main/generated`.
+- `src/main/generated` holds the models, lang, recipes and recipe advancements. There is no datagen on
+  1.16.5 (see [Version notes](#version-notes)).
 - Textures in `assets/weaponry/textures/item` are copied from `../pixel-art/weaponry/png/<tier>/` (render with `python render.py weaponry` there; `warhammer.png` → `<tier>_war_hammer.png`, `gold/` → `golden_`).
 
 ## Testing
@@ -70,7 +71,6 @@ Commands: `/give @s weaponry:<material>_<weapon>`, e.g. `weaponry:iron_war_hamme
 ## Commands
 
 ```
-./gradlew runDatagen   # regenerate src/main/generated after changing items
 ./gradlew runClient    # play-test
 ./gradlew build        # jar in build/libs
 ```
@@ -95,6 +95,16 @@ Differences from the 1.21.1 version:
   `Item.Properties.tab`. Its translation key is `itemGroup.weaponry.weapons`.
 - **Data:** recipes in `data/weaponry/recipes` with `result.item` and no recipe category. No item tags:
   the `enchantable/*` tags and `breaks_decorated_pots` don't exist yet, so there is no tag provider.
-  The datagen providers use the older `FabricDataGenerator` constructors.
+- **No datagen.** Fabric API for 1.16 has no data generation module, so the `datagen/` package and
+  `runDatagen` are gone. `src/main/generated` is the 1.18.2 branch's datagen output, added to the
+  resources in `build.gradle`. The recipe advancements were converted to the 1.16.5 item predicate
+  (`"item": "minecraft:iron_ingot"` instead of `"items": [...]`). After changing items or recipes,
+  regenerate on a newer branch and copy the files over, converting the advancements the same way.
+- **Java 8:** `WeaponTier` is a class instead of a record, and `TestChest` avoids `instanceof` patterns
+  and `List.of`. The logger is Log4j (`LogManager`), as in the 1.16.5 template.
+- **One source set.** Loom can only split client and common code on versions with a bundled server
+  jar (1.18+), so `WeaponryClient` lives in `src/main/java` and is still only loaded on the client.
+- Fabric API's mod id is `fabric` here, so `fabric.mod.json` depends on `fabric`.
 - `Registry.ITEM` instead of `BuiltInRegistries`, `new ResourceLocation(...)`, and the test chest is
-  named with `setCustomName(new TextComponent(...))` (`Component.literal` came in 1.19).
+  named with `setCustomName(new TextComponent(...))` (`Component.literal` came in 1.19). The world has no
+  negative heights, so the chest search runs from the build limit down to y 0.
