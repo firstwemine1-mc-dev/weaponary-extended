@@ -11,21 +11,14 @@ repositories {
 	// for more information about repositories.
 }
 
-loom {
-	splitEnvironmentSourceSets()
-
-	mods {
-		"weaponry" {
-			sourceSet sourceSets.main
-			sourceSet sourceSets.client
+// Fabric API for 1.16 has no data generation module, so there is no runDatagen here. The JSON in
+// src/main/generated is carried over from the 1.18.2 branch's datagen output (see README).
+sourceSets {
+	main {
+		resources {
+			srcDir "src/main/generated"
 		}
 	}
-}
-
-fabricApi {
-	// Generates models, lang, recipes and tags from WeaponType/WeaponMaterial into src/main/generated.
-	// Run with: ./gradlew runDatagen
-	configureDataGeneration()
 }
 
 dependencies {
@@ -48,7 +41,7 @@ processResources {
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 17
+	it.options.release = 8
 }
 
 java {
@@ -57,8 +50,8 @@ java {
 	// If you remove this line, sources will not be generated.
 	withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_17
-	targetCompatibility = JavaVersion.VERSION_17
+	sourceCompatibility = JavaVersion.VERSION_1_8
+	targetCompatibility = JavaVersion.VERSION_1_8
 }
 
 jar {

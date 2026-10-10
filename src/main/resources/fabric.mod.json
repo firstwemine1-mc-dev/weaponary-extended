@@ -16,9 +16,6 @@
 		],
 		"client": [
 			"net.firstwemine1.weaponry.client.WeaponryClient"
-		],
-		"fabric-datagen": [
-			"net.firstwemine1.weaponry.datagen.WeaponryDataGenerator"
 		]
 	},
 	"mixins": [
@@ -26,8 +23,8 @@
 	],
 	"depends": {
 		"fabricloader": ">=0.19.5",
-		"minecraft": "~1.18.2",
-		"java": ">=17",
-		"fabric-api": "*"
+		"minecraft": "~1.16.5",
+		"java": ">=8",
+		"fabric": "*"
 	}
 }
