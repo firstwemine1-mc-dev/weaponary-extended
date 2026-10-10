@@ -1,10 +1,11 @@
 # Weaponry
 
-Fabric mod for Minecraft **1.21.1** (Java 21, Mojang mappings). It adds 10 melee weapons in
+Fabric mod for Minecraft **1.20.1** (Java 17, Mojang mappings). It adds 10 melee weapons in
 5 material tiers, for 50 items in total. This first pass covers base stats only; abilities come later.
 
 Built from the official [fabric-example-mod](https://github.com/FabricMC/fabric-example-mod)
-template (`1.21.1` branch). A pristine copy of that template lives at `../fabric-example-mod`.
+template (`1.20.1` branch). A pristine copy of that template lives at `../fabric-example-mod`.
+Ported from the 1.21.1 version; see [Version notes](#version-notes).
 
 ## Side
 
@@ -29,7 +30,7 @@ synced to the client, so the mod can't be client-only, and a vanilla client can'
 Tiers are wooden, stone, iron, golden and diamond. Damage bonus, enchantability, repair item and base
 durability all come from the vanilla tier. Source: `../pixel-art/weaponry/docs/weapon-stats.md`.
 
-\* Recorded in `WeaponType`, but not enforced yet.
+\* Recorded in `WeaponType`, but not enforced yet. Reach is not applied on 1.20.1 (see [Version notes](#version-notes)).
 
 ## Recipes (M = material, S = stick)
 
@@ -46,8 +47,9 @@ S        .M.      .M.       .S.      .SM      MM.      MS.      MS       MSM    
 
 - `item/WeaponType` holds the per-weapon stats. `item/WeaponMaterial` holds the tiers. Edit these to rebalance.
 - `item/WeaponItem` is the single item class. It behaves like a sword without the sweep attack.
+- `mixin/WeaponEnchantmentCategoryMixin` lets weapons take sword enchantments (see [Version notes](#version-notes)).
 - `item/WeaponAbility` is the hook point for future abilities. Every weapon uses `NONE` for now.
-- `datagen/` generates models, lang, recipes and tags into `src/main/generated`.
+- `datagen/` generates models, lang, recipes and the decorated-pot tag into `src/main/generated`.
 - Textures in `assets/weaponry/textures/item` are copied from `../pixel-art/weaponry/png/<tier>/` (render with `python render.py weaponry` there; `warhammer.png` → `<tier>_war_hammer.png`, `gold/` → `golden_`).
 
 ## Testing
@@ -72,3 +74,23 @@ Commands: `/give @s weaponry:<material>_<weapon>`, e.g. `weaponry:iron_war_hamme
 ./gradlew runClient    # play-test
 ./gradlew build        # jar in build/libs
 ```
+
+## Version notes
+
+Differences from the 1.21.1 version:
+
+- **No reach.** The `entity_interaction_range` attribute only exists from 1.20.5, so every weapon has the
+  vanilla 3-block reach. The reach values stay in `WeaponType` for later versions.
+- **Attributes** come from `getDefaultAttributeModifiers(EquipmentSlot)` with the vanilla
+  `BASE_ATTACK_DAMAGE_UUID` / `BASE_ATTACK_SPEED_UUID` modifiers, not from item components.
+- **Enchanting.** Enchantments aren't tag-based yet: sharpness, smite, bane of arthropods, knockback, fire
+  aspect, looting and sweeping edge use the `WEAPON` category, which only accepts `SwordItem`. Weapons
+  aren't swords, because `Player.attack` sweeps with any `SwordItem`. Fabric API has no hook for this here,
+  so `WeaponEnchantmentCategoryMixin` makes that category accept weapons. That covers the enchanting table,
+  the anvil and `/enchant`. Unbreaking, mending and vanishing work on any damageable item already.
+  Sweeping edge can be applied but does nothing, as on 1.21.1.
+- **Durability per block** is handled in `WeaponItem.mineBlock` (2 per block, like a sword) instead of the
+  `tool` component.
+- **Data:** recipes in `data/weaponry/recipes` with `result.item`, tags in `tags/items`. Only
+  `minecraft:breaks_decorated_pots` is tagged; the `enchantable/*` tags don't exist yet.
+- `new ResourceLocation(...)`, and the test chest is named with `setCustomName`.
