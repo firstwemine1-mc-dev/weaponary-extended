@@ -37,9 +37,9 @@ The material is planks, stone tool materials, iron ingot, gold ingot or diamond.
 
 ```
 Dagger   Sabre    Scimitar  Spear    Pike     Lance    Halberd  Hatchet  War Hammer  Club
-M        ..M      .MM       .M       .MM      ..M      MM.      MM       MMM         .M
-S        .M.      .M.       .S       .SM      MM.      MS.      MS       MSM         S.
-         S..      S..       S.       S..      S..      ..S               .S.
+M        ..M      .MM       .M       .MM      ..M      MMM      MM       MMM         .M
+S        .M.      .M.       .S       .SM      MM.      .S.      MS       MSM         S.
+         S..      S..       S.       S..      S..      S..               .S.
 ```
 
 ## Layout
