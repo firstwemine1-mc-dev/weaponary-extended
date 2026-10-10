@@ -7,15 +7,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.level.Level;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * A melee weapon: one {@link WeaponType} in one {@link WeaponMaterial}. Behaves like a sword minus
  * the sweep attack (sweeping is a per-weapon ability, not a default).
  */
-public class WeaponItem extends TieredItem {
+public class WeaponItem extends Item {
 	/** Vanilla sword damage is 1 (player base) + 3 + tier bonus. */
 	private static final int SWORD_BASE_DAMAGE = 3;
 	private static final float PLAYER_BASE_ATTACK_SPEED = 4.0f;
@@ -42,14 +42,16 @@ public class WeaponItem extends TieredItem {
 	}
 
 	private WeaponItem(WeaponType type, WeaponMaterial material, WeaponTier tier, Properties properties) {
-		super(tier, properties.attributes(createAttributes(type, tier)).component(DataComponents.TOOL, TOOL));
+		super(tier.applyCommonProperties(properties)
+				.attributes(createAttributes(type, tier))
+				.component(DataComponents.TOOL, TOOL));
 		this.type = type;
 		this.material = material;
 	}
 
 	public static ItemAttributeModifiers createAttributes(WeaponType type, WeaponTier tier) {
 		// Modifier on top of the player's base 1 damage; never below 0 so a hit always does >= 1.
-		float damage = Math.max(0, SWORD_BASE_DAMAGE + tier.getAttackDamageBonus() + type.damageOffset());
+		float damage = Math.max(0, SWORD_BASE_DAMAGE + tier.attackDamageBonus() + type.damageOffset());
 		ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder()
 				.add(Attributes.ATTACK_DAMAGE,
 						new AttributeModifier(BASE_ATTACK_DAMAGE_ID, damage, AttributeModifier.Operation.ADD_VALUE),
@@ -96,8 +98,8 @@ public class WeaponItem extends TieredItem {
 	// --- ability hooks ---
 
 	@Override
-	public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
-		InteractionResultHolder<ItemStack> result = type.ability().onUse(level, player, hand);
-		return result.getResult().consumesAction() ? result : super.use(level, player, hand);
+	public InteractionResult use(Level level, Player player, InteractionHand hand) {
+		InteractionResult result = type.ability().onUse(level, player, hand);
+		return result.consumesAction() ? result : super.use(level, player, hand);
 	}
 }

@@ -1,42 +1,25 @@
 package net.firstwemine1.weaponry.item;
 
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ToolMaterial;
 
 /**
- * A vanilla tier with durability scaled for one weapon type. {@code TieredItem} takes durability
- * from the tier, so scaling it here is how each weapon gets its own durability.
+ * A vanilla tool material with durability scaled for one weapon type. Items take durability,
+ * repair item and enchantability from properties, which {@link #applyCommonProperties} sets.
  */
-public record WeaponTier(Tier base, float durabilityMultiplier) implements Tier {
-	@Override
-	public int getUses() {
-		return Math.max(1, (int) (base.getUses() * durabilityMultiplier));
+public record WeaponTier(ToolMaterial base, float durabilityMultiplier) {
+	public int durability() {
+		return Math.max(1, (int) (base.durability() * durabilityMultiplier));
 	}
 
-	@Override
-	public float getSpeed() {
-		return base.getSpeed();
+	public float attackDamageBonus() {
+		return base.attackDamageBonus();
 	}
 
-	@Override
-	public float getAttackDamageBonus() {
-		return base.getAttackDamageBonus();
-	}
-
-	@Override
-	public TagKey<Block> getIncorrectBlocksForDrops() {
-		return base.getIncorrectBlocksForDrops();
-	}
-
-	@Override
-	public int getEnchantmentValue() {
-		return base.getEnchantmentValue();
-	}
-
-	@Override
-	public Ingredient getRepairIngredient() {
-		return base.getRepairIngredient();
+	/** Same as the private {@code ToolMaterial.applyCommonProperties}, with the scaled durability. */
+	public Item.Properties applyCommonProperties(Item.Properties properties) {
+		return properties.durability(durability())
+				.repairable(base.repairItems())
+				.enchantable(base.enchantmentValue());
 	}
 }

@@ -12,6 +12,7 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -29,18 +30,28 @@ public class WeaponRecipeProvider extends FabricRecipeProvider {
 	}
 
 	@Override
-	public void buildRecipes(RecipeOutput output) {
-		for (WeaponItem item : ModItems.all()) {
-			ShapedRecipeBuilder builder = ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, item);
-			for (String row : pattern(item)) {
-				builder.pattern(row);
+	protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
+		return new RecipeProvider(registries, output) {
+			@Override
+			public void buildRecipes() {
+				for (WeaponItem item : ModItems.all()) {
+					ShapedRecipeBuilder builder = shaped(RecipeCategory.COMBAT, item);
+					for (String row : pattern(item)) {
+						builder.pattern(row);
+					}
+					MaterialInput material = materialInput(this, item);
+					builder.define('M', material.ingredient())
+							.define('S', Items.STICK)
+							.unlockedBy(material.criterionName(), material.criterion())
+							.save(output);
+				}
 			}
-			MaterialInput material = materialInput(item);
-			builder.define('M', material.ingredient())
-					.define('S', Items.STICK)
-					.unlockedBy(material.criterionName(), material.criterion())
-					.save(output);
-		}
+		};
+	}
+
+	@Override
+	public String getName() {
+		return "Weaponry recipes";
 	}
 
 	private static String[] pattern(WeaponItem item) {
@@ -59,25 +70,25 @@ public class WeaponRecipeProvider extends FabricRecipeProvider {
 	}
 
 	private record MaterialInput(Ingredient ingredient, String criterionName, Criterion<InventoryChangeTrigger.TriggerInstance> criterion) {
-		static MaterialInput of(TagKey<Item> tag, String name) {
-			return new MaterialInput(Ingredient.of(tag), "has_" + name, has(tag));
+		static MaterialInput of(RecipeProvider recipes, TagKey<Item> tag, String name) {
+			return new MaterialInput(recipes.tag(tag), "has_" + name, recipes.has(tag));
 		}
 
-		static MaterialInput of(Item item) {
-			return new MaterialInput(Ingredient.of(item), getHasName(item), has(item));
+		static MaterialInput of(RecipeProvider recipes, Item item) {
+			return new MaterialInput(Ingredient.of(item), RecipeProvider.getHasName(item), recipes.has(item));
 		}
 	}
 
-	private static MaterialInput materialInput(WeaponItem item) {
+	private static MaterialInput materialInput(RecipeProvider recipes, WeaponItem item) {
 		return switch (item.material()) {
 			// The club is the cheap weapon: a wooden one is carved from a whole log.
 			case WOODEN -> item.type() == WeaponType.CLUB
-					? MaterialInput.of(ItemTags.LOGS, "logs")
-					: MaterialInput.of(ItemTags.PLANKS, "planks");
-			case STONE -> MaterialInput.of(ItemTags.STONE_TOOL_MATERIALS, "stone_tool_materials");
-			case IRON -> MaterialInput.of(Items.IRON_INGOT);
-			case GOLDEN -> MaterialInput.of(Items.GOLD_INGOT);
-			case DIAMOND -> MaterialInput.of(Items.DIAMOND);
+					? MaterialInput.of(recipes, ItemTags.LOGS, "logs")
+					: MaterialInput.of(recipes, ItemTags.PLANKS, "planks");
+			case STONE -> MaterialInput.of(recipes, ItemTags.STONE_TOOL_MATERIALS, "stone_tool_materials");
+			case IRON -> MaterialInput.of(recipes, Items.IRON_INGOT);
+			case GOLDEN -> MaterialInput.of(recipes, Items.GOLD_INGOT);
+			case DIAMOND -> MaterialInput.of(recipes, Items.DIAMOND);
 		};
 	}
 }

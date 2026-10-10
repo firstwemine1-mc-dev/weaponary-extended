@@ -25,7 +25,10 @@ loom {
 fabricApi {
 	// Generates models, lang, recipes and tags from WeaponType/WeaponMaterial into src/main/generated.
 	// Run with: ./gradlew runDatagen
-	configureDataGeneration()
+	// Item models are client classes since 1.21.4, so datagen lives in the client source set.
+	configureDataGeneration {
+		client = true
+	}
 }
 
 dependencies {

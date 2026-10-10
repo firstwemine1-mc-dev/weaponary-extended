@@ -10,7 +10,9 @@ import net.firstwemine1.weaponry.Weaponry;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 
@@ -27,8 +29,10 @@ public final class ModItems {
 		for (WeaponType type : WeaponType.values()) {
 			Map<WeaponMaterial, WeaponItem> byMaterial = new EnumMap<>(WeaponMaterial.class);
 			for (WeaponMaterial material : WeaponMaterial.values()) {
-				WeaponItem item = new WeaponItem(type, material, new Item.Properties());
-				Registry.register(BuiltInRegistries.ITEM, Weaponry.id(itemId(type, material)), item);
+				// Properties need the registry key before the item is constructed.
+				ResourceKey<Item> key = ResourceKey.create(Registries.ITEM, Weaponry.id(itemId(type, material)));
+				WeaponItem item = new WeaponItem(type, material, new Item.Properties().setId(key));
+				Registry.register(BuiltInRegistries.ITEM, key, item);
 				byMaterial.put(material, item);
 				ALL.add(item);
 			}
