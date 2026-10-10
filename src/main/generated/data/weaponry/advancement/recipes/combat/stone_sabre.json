@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "weaponry:stone_sabre"
+        "recipes": "weaponry:stone_sabre"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

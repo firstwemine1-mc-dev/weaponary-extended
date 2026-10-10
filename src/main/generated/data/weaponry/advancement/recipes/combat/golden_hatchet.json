@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "weaponry:golden_hatchet"
+        "recipes": "weaponry:golden_hatchet"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

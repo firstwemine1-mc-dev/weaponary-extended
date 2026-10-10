@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "weaponry:wooden_war_hammer"
+        "recipes": "weaponry:wooden_war_hammer"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

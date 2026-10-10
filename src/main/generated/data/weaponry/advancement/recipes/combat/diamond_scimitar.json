@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "weaponry:diamond_scimitar"
+        "recipes": "weaponry:diamond_scimitar"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

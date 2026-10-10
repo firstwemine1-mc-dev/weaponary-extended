@@ -7,17 +7,19 @@ import net.firstwemine1.weaponry.item.WeaponItem;
 import net.firstwemine1.weaponry.item.WeaponType;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.triggers.Criterion;
 import net.minecraft.advancements.triggers.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.Ingredient;
 
 /**
@@ -35,8 +37,9 @@ public class WeaponRecipeProvider extends FabricRecipeProvider {
 	}
 
 	@Override
-	protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, RecipeOutput output) {
-		return new RecipeProvider(registries, output) {
+	protected RecipeProvider createRecipeProvider(HolderLookup.Provider registries, BootstrapContext<Recipe<?>> recipes,
+			BootstrapContext<Advancement> advancements) {
+		return new RecipeProvider(recipes, advancements) {
 			@Override
 			public void buildRecipes() {
 				for (WeaponItem item : ModItems.all()) {
@@ -48,7 +51,7 @@ public class WeaponRecipeProvider extends FabricRecipeProvider {
 					builder.define('M', material.ingredient())
 							.define('S', Items.STICK)
 							.unlockedBy(material.criterionName(), material.criterion())
-							.save(output);
+							.save(this.output);
 				}
 			}
 

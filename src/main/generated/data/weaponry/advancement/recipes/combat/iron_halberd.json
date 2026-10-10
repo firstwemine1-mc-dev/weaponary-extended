@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "weaponry:iron_halberd"
+        "recipes": "weaponry:iron_halberd"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

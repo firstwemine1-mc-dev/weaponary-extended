@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "weaponry:stone_lance"
+        "recipes": "weaponry:stone_lance"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

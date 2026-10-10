@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "weaponry:wooden_sabre"
+        "recipes": "weaponry:wooden_sabre"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

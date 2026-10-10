@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "weaponry:stone_halberd"
+        "recipes": "weaponry:stone_halberd"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

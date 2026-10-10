@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "weaponry:diamond_lance"
+        "recipes": "weaponry:diamond_lance"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

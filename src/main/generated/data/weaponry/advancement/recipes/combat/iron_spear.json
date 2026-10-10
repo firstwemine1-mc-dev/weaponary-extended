@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "weaponry:iron_spear"
+        "recipes": "weaponry:iron_spear"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
