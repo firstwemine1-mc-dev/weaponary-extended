@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "key": {
+    "M": {
+      "item": "minecraft:gold_ingot"
+    },
+    "S": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "MM",
+    "MS"
+  ],
+  "result": {
+    "item": "weaponry:golden_hatchet"
+  }
+}
