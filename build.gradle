@@ -1,0 +1,140 @@
+plugins {
+    id 'eclipse'
+    id 'idea'
+    id 'maven-publish'
+    id 'net.minecraftforge.gradle' version '6.0.16'
+}
+
+version = "${minecraft_version}-${mod_version}"
+group = mod_group
+
+base {
+    archivesName = mod_id
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(java_version)
+
+println "Java: ${System.getProperty 'java.version'}, JVM: ${System.getProperty 'java.vm.version'} (${System.getProperty 'java.vendor'}), Arch: ${System.getProperty 'os.arch'}"
+minecraft {
+    mappings channel: 'official', version: minecraft_version
+    copyIdeResources = true
+    enableEclipsePrepareRuns = true
+    enableIdeaPrepareRuns = true
+    runs {
+        configureEach {
+            workingDirectory project.file('run')
+
+            property 'forge.logging.markers', 'REGISTRIES'
+
+            property 'forge.logging.console.level', 'debug'
+        }
+
+        client {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        server {
+            property 'forge.enabledGameTestNamespaces', mod_id
+            args '--nogui'
+        }
+
+        gameTestServer {
+            property 'forge.enabledGameTestNamespaces', mod_id
+        }
+
+        data {
+            workingDirectory project.file('run-data')
+
+            args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
+        }
+    }
+}
+
+sourceSets.main.resources {
+    srcDir 'src/generated/resources'
+}
+
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${minecraft_version}-${forge_version}"
+}
+
+repositories {
+    // NOTE: ForgeGradle 6.0.16's artifact downloader fails to resolve the Forge userdev artifact
+    // when an exclusiveContent{} repository is declared, so the Sponge repo used on 1.21.6 is gone.
+    mavenCentral()
+    maven {
+        name = 'Forge'
+        url = 'https://maven.minecraftforge.net/'
+    }
+    maven {
+        name = 'Minecraft libraries'
+        url = 'https://libraries.minecraft.net'
+    }
+}
+
+tasks.named('processResources', ProcessResources) {
+    def properties = [
+            mod_id:mod_id,
+            version:version,
+            mod_version:mod_version,
+            mod_group:mod_group,
+            mod_name:mod_name,
+            mod_description:mod_description,
+            mod_credits:mod_credits,
+            mod_issue_tracker:mod_issue_tracker,
+            mod_url:mod_url,
+            mod_license:mod_license,
+
+            author_name:author_name,
+            author_domain:author_domain,
+
+            minecraft_version:minecraft_version,
+            minecraft_min_version:minecraft_min_version,
+            minecraft_max_version:minecraft_max_version,
+
+            forge_version:forge_version,
+            forge_min_version:forge_min_version,
+            forge_max_version:forge_max_version,
+            forge_update_json_url:forge_update_json_url,
+            forge_displaytest_value:forge_displaytest_value,
+            forge_minecraft_side:forge_minecraft_side
+    ]
+
+    inputs.properties properties
+
+    from(sourceSets.main.resources.srcDirs) {
+        duplicatesStrategy 'include'
+        include 'META-INF/mods.toml'
+        expand properties
+    }
+}
+
+tasks.named('jar', Jar) {
+    // Ship the license text inside the jar
+    from(rootProject.file('LICENSE'))
+
+    manifest {
+        attributes([
+                "Specification-Title"     : mod_name,
+                "Specification-Vendor"    : author_name,
+                "Specification-Version"   : mod_version,
+                "Implementation-Title"    : mod_name,
+                "Implementation-Vendor"   : author_name,
+                "Implementation-Version"  : mod_version,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
+
+    finalizedBy 'reobfJar'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+sourceSets.each {
+    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
+    it.output.resourcesDir = dir
+    it.java.destinationDirectory = dir
+}
