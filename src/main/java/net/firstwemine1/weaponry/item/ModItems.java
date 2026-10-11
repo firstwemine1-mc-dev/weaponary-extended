@@ -1,0 +1,67 @@
+package net.firstwemine1.weaponry.item;
+
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+
+import net.firstwemine1.weaponry.Weaponry;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
+
+public final class ModItems {
+	private static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, Weaponry.MOD_ID);
+
+	private static final Map<WeaponType, Map<WeaponMaterial, RegistryObject<WeaponItem>>> WEAPONS = new EnumMap<>(WeaponType.class);
+	private static final List<RegistryObject<WeaponItem>> ALL = new ArrayList<>();
+
+	public static final String CREATIVE_TAB_KEY = "itemGroup." + Weaponry.MOD_ID;
+
+	/** Its label key is {@code itemGroup.weaponry}, the same as {@link #CREATIVE_TAB_KEY}. */
+	public static final CreativeModeTab TAB = new CreativeModeTab(Weaponry.MOD_ID) {
+		@Override
+		public ItemStack makeIcon() {
+			return get(WeaponType.HALBERD, WeaponMaterial.IRON).getDefaultInstance();
+		}
+	};
+
+	static {
+		for (WeaponType type : WeaponType.values()) {
+			Map<WeaponMaterial, RegistryObject<WeaponItem>> byMaterial = new EnumMap<>(WeaponMaterial.class);
+			for (WeaponMaterial material : WeaponMaterial.values()) {
+				RegistryObject<WeaponItem> item = ITEMS.register(itemId(type, material),
+						() -> new WeaponItem(type, material, new Item.Properties().tab(TAB)));
+				byMaterial.put(material, item);
+				ALL.add(item);
+			}
+			WEAPONS.put(type, byMaterial);
+		}
+	}
+
+	private ModItems() {
+	}
+
+	public static void register(IEventBus modBus) {
+		ITEMS.register(modBus);
+	}
+
+	public static String itemId(WeaponType type, WeaponMaterial material) {
+		return material.id() + "_" + type.id();
+	}
+
+	public static WeaponItem get(WeaponType type, WeaponMaterial material) {
+		return WEAPONS.get(type).get(material).get();
+	}
+
+	/** Every weapon, ordered by type then material. Only valid once items are registered. */
+	public static List<WeaponItem> all() {
+		List<WeaponItem> items = new ArrayList<>(ALL.size());
+		ALL.forEach(item -> items.add(item.get()));
+		return items;
+	}
+}
