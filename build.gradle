@@ -27,6 +27,14 @@ minecraft {
             property 'forge.logging.markers', 'REGISTRIES'
 
             property 'forge.logging.console.level', 'debug'
+
+            // Forge 1.16 needs the dev mod's classes registered under its mod id, or it finds the
+            // mods.toml but constructs no mod.
+            mods {
+                "${mod_id}" {
+                    source sourceSets.main
+                }
+            }
         }
 
         client {
@@ -133,8 +141,5 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8'
 }
 
-sourceSets.each {
-    def dir = layout.buildDirectory.dir("sourcesSets/$it.name")
-    it.output.resourcesDir = dir
-    it.java.destinationDirectory = dir
-}
+// Classes and resources stay in Gradle's separate output folders: Forge 1.16 takes the first dev mod path
+// as resources and scans only the others for classes, so one shared folder would hide every class.

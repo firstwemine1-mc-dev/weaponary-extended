@@ -1,16 +1,54 @@
 package net.firstwemine1.weaponry;
 
+import net.firstwemine1.weaponry.ability.Abilities;
+import net.firstwemine1.weaponry.client.WeaponryClient;
+import net.firstwemine1.weaponry.combat.CombatEvents;
+import net.firstwemine1.weaponry.effect.ModEffects;
+import net.firstwemine1.weaponry.entity.ModEntities;
+import net.firstwemine1.weaponry.item.ModItems;
+import net.firstwemine1.weaponry.testing.TestChest;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.server.FMLServerStartedEvent;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import net.minecraftforge.fml.common.Mod;
 
-/** Forge entry point. Empty skeleton: the weapons are ported from the Fabric branches later. */
+/** Forge entry point: registries on the mod bus, abilities and combat hooks on the Forge bus. */
 @Mod(Weaponry.MOD_ID)
 public final class Weaponry {
 	public static final String MOD_ID = "weaponry";
-	private static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+	public static final Logger LOGGER = LogManager.getLogger(MOD_ID);
+
+	private static WeaponryConfig config;
+
+	public static ResourceLocation id(String path) {
+		return new ResourceLocation(MOD_ID, path);
+	}
+
+	public static WeaponryConfig config() {
+		return config;
+	}
 
 	public Weaponry() {
-		LOGGER.info("Weaponry skeleton loaded");
+		IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
+		config = WeaponryConfig.load();
+
+		ModItems.register(modBus);
+		ModEntities.register(modBus);
+		ModEffects.register(modBus);
+		Abilities.register();
+		CombatEvents.register();
+
+		if (config.testChest) {
+			LOGGER.info("Test mode on (config/weaponry.json \"testChest\"): test chest will be placed at spawn");
+			MinecraftForge.EVENT_BUS.addListener((FMLServerStartedEvent event) -> TestChest.placeOrRefill(event.getServer()));
+		}
+
+		DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> WeaponryClient.init(modBus));
 	}
 }
