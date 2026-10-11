@@ -42,3 +42,6 @@ replay_*.log
 # datagen cache (rewritten on every run)
 
 src/main/generated/.cache/
+
+# Python bytecode from scripts/
+__pycache__/
