@@ -86,6 +86,8 @@ def generateModMetadata = tasks.register('generateModMetadata', ProcessResources
 }
 
 sourceSets.main.resources.srcDir generateModMetadata
+// Models, lang, recipes and tags: the matching fabric/<version> branch's datagen output.
+sourceSets.main.resources.srcDir 'src/generated/resources'
 neoForge.ideSyncTask generateModMetadata
 
 tasks.named('jar', Jar) {
