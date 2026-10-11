@@ -7,6 +7,10 @@ import net.minecraft.world.item.Tiers;
  * The material tiers every weapon comes in. Damage bonus, enchantability, repair item and base
  * durability all come from the matching vanilla {@link Tiers}, so weapons track vanilla balance.
  *
+ * <p>{@link #abilityStrength()} is the gold "material twist" from the design sheet: gold weapons
+ * have weaker durability but stronger abilities. The other twists (wooden armor crush, stone
+ * knockback, diamond throw damage) live in the abilities that use them.
+ *
  * <p>To add a tier (e.g. netherite): add a constant here, a texture per weapon under
  * {@code textures/item/}, and a crafting/smithing entry in the recipe provider.
  */
@@ -37,5 +41,10 @@ public enum WeaponMaterial {
 
 	public Tier tier() {
 		return tier;
+	}
+
+	/** Multiplier for ability numbers (bonus damage, effect durations, chances, pull strength). */
+	public float abilityStrength() {
+		return this == GOLDEN ? 1.5f : 1.0f;
 	}
 }
