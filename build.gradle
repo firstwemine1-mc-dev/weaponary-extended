@@ -20,6 +20,22 @@ loom {
 			sourceSet sourceSets.client
 		}
 	}
+
+	// Multiplayer testing on one PC: runServer uses run/, each client gets its own folder and name,
+	// so all three can run at once without fighting over options and log files.
+	runs {
+		client {
+			runDir "run/client1"
+			programArgs "--username", "Player1"
+		}
+		client2 {
+			client()
+			source sourceSets.client
+			name "Minecraft Client 2"
+			runDir "run/client2"
+			programArgs "--username", "Player2"
+		}
+	}
 }
 
 fabricApi {
