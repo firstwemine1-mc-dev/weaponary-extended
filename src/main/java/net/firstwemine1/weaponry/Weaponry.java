@@ -1,5 +1,8 @@
 package net.firstwemine1.weaponry;
 
+import net.firstwemine1.weaponry.ability.Abilities;
+import net.firstwemine1.weaponry.effect.ModEffects;
+import net.firstwemine1.weaponry.entity.ModEntities;
 import net.firstwemine1.weaponry.item.ModItems;
 import net.firstwemine1.weaponry.testing.TestChest;
 import net.fabricmc.api.ModInitializer;
@@ -26,6 +29,9 @@ public class Weaponry implements ModInitializer {
 	public void onInitialize() {
 		config = WeaponryConfig.load();
 		ModItems.register();
+		ModEntities.register();
+		ModEffects.register();
+		Abilities.register();
 		LOGGER.info("Registered {} weapons", ModItems.all().size());
 
 		if (config.testChest) {
