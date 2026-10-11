@@ -1,7 +1,7 @@
 # Weaponry
 
 Fabric mod for Minecraft **1.21.11** (Java 21, Mojang mappings). It adds 10 melee weapons in
-5 material tiers, for 50 items in total. This first pass covers base stats only; abilities come later.
+5 material tiers, for 50 items in total, each with its own abilities (see [Abilities](#abilities)).
 
 Built from the official [fabric-example-mod](https://github.com/FabricMC/fabric-example-mod)
 template (`1.21.11` branch). A pristine copy of that template lives at `../fabric-example-mod`.
@@ -17,7 +17,7 @@ synced to the client, so the mod can't be client-only, and a vanilla client can'
 |---|---:|---:|---:|---:|---|
 | Dagger | −2 | 2.4 | 2.5 | 0.75 | |
 | Sabre | −1 | 2.0 | 3.0 | 1.0 | |
-| Scimitar | 0 | 1.6 | 3.0 | 1.0 | |
+| Scimitar | 0 | 1.6 | 3.0 | 1.0 | yes |
 | Spear | −1 | 1.4 | 4.0 | 1.0 | |
 | Pike | 0 | 1.0 | 5.0 | 1.2 | yes |
 | Lance | −2 | 0.8 | 4.5 | 0.6 | yes |
@@ -29,7 +29,51 @@ synced to the client, so the mod can't be client-only, and a vanilla client can'
 Tiers are wooden, stone, iron, golden and diamond. Damage bonus, enchantability, repair item and base
 durability all come from the vanilla tool material. Source: `../pixel-art/weaponry/docs/weapon-stats.md`.
 
-\* Recorded in `WeaponType`, but not enforced yet.
+\* Needs both hands. While it's in the main hand, whatever is in the off hand (a shield, a torch...) is moved
+into your inventory, and a two-handed weapon put in the off hand is moved out too. The action bar says what moved.
+If the inventory is full, the item stays in the off hand but is blocked: no shield, no dual wielding, no off-hand
+item use, and a raised shield is lowered.
+
+## Abilities
+
+From `../pixel-art/weaponry/docs/weapon-stats.md` section 4. "Full charge" means the attack cooldown is over 90%,
+the same threshold vanilla uses for sweeps and crits.
+
+| Weapon | Passive | Active |
+|---|---|---|
+| Dagger | **Backstab:** ×1.5 damage when hitting a target from behind (within 60° of straight behind it). Critical hits cause **Bleed**. | **Throw:** like the spear. Melee damage +1, and it causes **Bleed**. |
+| Sabre | +2 damage while mounted. | **Riposte:** use to parry for 0.5 s (1 s cooldown). Parrying a frontal melee hit cancels it, and your next hit within 3 s is a guaranteed crit. |
+| Scimitar | **Draw Cut:** full-charge, grounded, non-sprinting hits sweep, with about 1.5× the vanilla sweep area. Everything the sweep hits, the main target included, gets **Bleed**. | |
+| Spear | Reach 4. +1 damage on a sprinting hit. | **Throw:** hold use (at least 0.5 s) and release. Melee damage +2. It drops where it lands; pick it up again. |
+| Pike | Reach 5. Half damage against targets under 1.5 blocks away. | **Brace:** sneak and stand still. Hits on targets charging at you (2+ blocks/s, on foot or mounted) do double damage and dismount riders. |
+| Lance | No critical hits. | **Couched Charge:** hit while riding a mount moving at 4+ blocks/s. Bonus damage = 0.8 × mount speed (blocks/s), max +15, plus heavy knockback and the target is dismounted. Costs 3 durability. |
+| Halberd | Reach 4. Disables shields like an axe. | **Hook:** use on a target in reach (2 s cooldown, 1 durability). Pulls it toward you, pulls it off its mount, and knocks a raised shield aside. |
+| Hatchet | Disables shields. Mines wood at axe speed and takes Efficiency, Fortune and Silk Touch. | **Throw:** like the spear, but short range and spinning. Melee damage +1. |
+| War Hammer | **Armor Crush:** ignores 50% of the target's armor. Full-charge hits cause **Stagger** for 1 s. | **Overhead Smash:** a full-charge hit while sneaking knocks back everything within 2.5 blocks of the target, and everything it hits (target included) gets **Stun** for 0.75 s. |
+| Club | +1 knockback. **Daze:** full-charge hits have a 20% chance to cause **Daze** for 2 s. | |
+
+Material twists:
+
+- **Wooden:** half the armor crush; Bleed lasts 2 s.
+- **Stone:** +1 knockback on the club and war hammer.
+- **Golden:** ability numbers × 1.5 (bonus damage, effect durations, daze chance, hook pull, smash knockback, armor crush).
+- **Diamond:** +1 throw damage; Bleed lasts 6 s.
+
+Status effects (`effect/ModEffects`), each with its own icon:
+
+| Effect | Does | From |
+|---|---|---|
+| **Bleed** | 1 damage per second per stack for 4 s, ignoring armor and hit cooldown. Each new application adds a stack (max 3, shown as Bleed II/III) and refreshes the duration. Undead and golems are immune. | Dagger crits and throws, scimitar sweeps |
+| **Stagger** | A short, sharp screen lurch for a staggered player. No slowdown. | War hammer full-charge hits |
+| **Stun** | 90% slower, nearly rooted. | War hammer smash |
+| **Daze** | 15% slower (like Slowness I), and a dazed player's view wobbles like Nausea. | Club |
+
+The icons are drawn in `../pixel-art/weaponry/designs/effects/` (16×16). `python scripts/copy_effect_icons.py`
+copies them to `textures/mob_effect/` with a 1 px transparent border, because the game draws effect icons at 18×18.
+Bleed damage uses the `weaponry:bleed` damage type (`data/weaponry/damage_type/`), tagged to bypass armor and
+hit cooldown.
+
+Also not done yet: the lance's "−1 speed tier on foot" (it is already the slowest weapon), and the brace doesn't lock movement.
 
 ## Recipes (M = material, S = stick)
 
@@ -46,7 +90,13 @@ S        .M.      .M.       .SM      .SM      MM.      .S.      MS       MSM    
 
 - `item/WeaponType` holds the per-weapon stats. `item/WeaponMaterial` holds the tiers. Edit these to rebalance.
 - `item/WeaponItem` is the single item class. It behaves like a sword without the sweep attack.
-- `item/WeaponAbility` is the hook point for future abilities. Every weapon uses `NONE` for now.
+- `item/WeaponAbility` is the ability interface; each `WeaponType` holds one. The implementations are in `ability/`,
+  and their tooltip lines are generated into the lang file from `WeaponAbility.description()`.
+- `mixin/PlayerMixin` captures the attack charge (vanilla resets it before item hooks run), turns off crits for the
+  lance and applies armor crush. Halberds and hatchets disable shields through their `weapon` component.
+- `effect/` holds the status effects; `BleedEffect.apply` handles stacking, immunity and the material durations.
+- `combat/Motion` tracks player and mount speed on the server (for the brace and the couched charge).
+- `entity/ThrownWeapon` is the thrown spear or hatchet; `ThrownWeaponRenderer` (client) draws its item model.
 - `datagen/` (in the client source set, `src/client/java`) generates models, item model definitions, lang, recipes and tags into `src/main/generated`.
 - Textures in `assets/weaponry/textures/item` are copied from `../pixel-art/weaponry/png/<tier>/` (render with `python render.py weaponry` there; `warhammer.png` → `<tier>_war_hammer.png`, `gold/` → `golden_`).
 
@@ -109,3 +159,30 @@ Differences from 1.21.1:
 - `TestChest`: the world spawn comes from `getRespawnData().pos()`, and the height bounds come from `getMinY()`/`getMaxY()`.
   Since 1.21.9 there are no always-loaded spawn chunks. The chest is still placed and refilled on server start,
   because the server loads the chunk when the chest is placed.
+
+Abilities and status effects (ported from the 1.21.1 baseline, same behaviour):
+
+- `use()` hooks return `InteractionResult`, `releaseUsing` returns whether it did something, and use
+  animations are `ItemUseAnimation`. `WeaponAbility` follows those signatures.
+- Server damage goes through `hurtServer(ServerLevel, ...)`; `Player.attack` calls `hurtOrSimulate`, which is
+  what `PlayerMixin` wraps for armor crush. Effect ticks (`BleedEffect`) get the `ServerLevel`.
+- Item cooldowns take an `ItemStack` (cooldown groups), and `Player.disableShield` takes the shield stack.
+- The hatchet's axe mining builds the same `Tool` rules `ToolMaterial.applyToolProperties` gives an axe.
+- Entity types are built with their `ResourceKey`. `ThrownWeaponRenderer` uses the render-state API
+  (`createRenderState`/`extractRenderState`) and draws the item through `ItemModelResolver`.
+
+Abilities and status effects (ported from the 1.21.1 baseline through 1.21.4, same behaviour):
+
+- **Shield breaking** is the `weapon` component's `disable_blocking_for_seconds` (5 s, the axe value) on
+  halberds and hatchets; `canDisableShield()` is gone. The halberd hook disables a raised shield through its
+  `blocks_attacks` component, the way an axe hit does.
+- **Crits:** the jump-crit check moved to `Player.canCriticalAttack`, which `PlayerMixin` turns off for the
+  lance. It checks `isMobilityRestricted()` instead of Blindness, and `AttackContext.vanillaCrit` follows it.
+- `Player.sweepAttack()` is gone, so the scimitar sends the sweep particle itself, as the vanilla sweep does.
+- Tooltips use the `appendHoverText(..., TooltipDisplay, Consumer<Component>, ...)` signature; the hatchet's
+  `tool` component can break blocks in creative, like an axe.
+- `AbstractArrow` moved to `projectile.arrow`, entities save through `ValueInput`/`ValueOutput`, and a thrown
+  weapon bounces off a hit with `deflect`, like the 1.21.11 trident. `ThrownWeaponRenderer` submits the item
+  through a `SubmitNodeCollector`.
+- The nausea-style wobble field is `portalEffectIntensity`; `AbstractGolem` is in `animal.golem`; hands map
+  to slots with `InteractionHand.asEquipmentSlot()`; the server comes from `level().getServer()`.
