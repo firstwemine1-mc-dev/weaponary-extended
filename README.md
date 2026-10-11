@@ -212,3 +212,7 @@ Abilities and status effects (same behaviour as 1.21.1, except where noted):
   and chat, and that service turns the offline dev account away ("Multiplayer is disabled"). The client-only
   `mixin/client/DevMultiplayerMixin` allows both, but only when `FabricLoader.isDevelopmentEnvironment()`, so
   `runClient`/`runClient2` can join the dev server. Normal installs are unaffected.
+- **Client-only vanilla methods.** This branch compiles against the merged client+server jar, so a call to a
+  client-only method builds fine and then crashes a dedicated server. `ProjectileUtil.getEntityHitResult(Entity, ...)`
+  and `Vec3.directionFromRotation` are client-only here, so the halberd hook does its own entity raycast and the
+  dagger works out the target's facing itself.

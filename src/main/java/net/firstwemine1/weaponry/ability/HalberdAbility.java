@@ -1,7 +1,9 @@
 package net.firstwemine1.weaponry.ability;
 
-import com.google.common.collect.ImmutableList;
 import java.util.List;
+import java.util.Optional;
+
+import com.google.common.collect.ImmutableList;
 
 import net.firstwemine1.weaponry.item.WeaponAbility;
 import net.firstwemine1.weaponry.item.WeaponItem;
@@ -14,11 +16,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 
@@ -87,11 +88,33 @@ public class HalberdAbility implements WeaponAbility {
 		if (block.getType() != HitResult.Type.MISS) {
 			end = block.getLocation();
 		}
-		EntityHitResult hit = ProjectileUtil.getEntityHitResult(player, eye, end,
-				player.getBoundingBox().expandTowards(end.subtract(eye)).inflate(1.0),
-				entity -> entity instanceof LivingEntity && !entity.isSpectator() && entity.isPickable(),
-				eye.distanceToSqr(end));
-		Entity entity = hit != null ? hit.getEntity() : null;
-		return entity instanceof LivingEntity ? (LivingEntity) entity : null;
+		AABB area = player.getBoundingBox().expandTowards(end.subtract(eye)).inflate(1.0);
+		return closestAlongRay(player, eye, end, area);
+	}
+
+	/**
+	 * The living entity the ray from {@code eye} to {@code end} hits first. Same logic as
+	 * {@code ProjectileUtil.getEntityHitResult(Entity, ...)}, which is client-only in 1.16.5 and so
+	 * missing on a dedicated server.
+	 */
+	private static LivingEntity closestAlongRay(Player player, Vec3 eye, Vec3 end, AABB area) {
+		LivingEntity closest = null;
+		double closestDistSqr = Double.MAX_VALUE;
+		for (Entity entity : player.level.getEntities(player, area,
+				e -> e instanceof LivingEntity && !e.isSpectator() && e.isPickable())) {
+			AABB box = entity.getBoundingBox().inflate(entity.getPickRadius());
+			if (box.contains(eye)) {
+				return (LivingEntity) entity;
+			}
+			Optional<Vec3> hit = box.clip(eye, end);
+			if (hit.isPresent() && entity.getRootVehicle() != player.getRootVehicle()) {
+				double distSqr = eye.distanceToSqr(hit.get());
+				if (distSqr < closestDistSqr) {
+					closest = (LivingEntity) entity;
+					closestDistSqr = distSqr;
+				}
+			}
+		}
+		return closest;
 	}
 }

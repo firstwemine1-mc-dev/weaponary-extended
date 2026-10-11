@@ -8,6 +8,7 @@ import net.firstwemine1.weaponry.effect.BleedEffect;
 import net.firstwemine1.weaponry.item.WeaponItem;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -73,7 +74,9 @@ public class DaggerAbility extends ThrowAbility {
 			return false;
 		}
 		float bodyYaw = target instanceof LivingEntity ? ((LivingEntity) target).yBodyRot : target.yRot;
-		Vec3 facing = Vec3.directionFromRotation(0, bodyYaw);
+		// Vec3.directionFromRotation is client-only in 1.16.5; this is its result for a level look.
+		float yaw = bodyYaw * ((float) Math.PI / 180.0f);
+		Vec3 facing = new Vec3(-Mth.sin(yaw), 0, Mth.cos(yaw));
 		return toAttacker.normalize().dot(facing) < BEHIND_DOT;
 	}
 }
