@@ -8,6 +8,9 @@
 		"WeaponDiggerCategoryMixin",
 		"WeaponEnchantmentCategoryMixin"
 	],
+	"client": [
+		"client.DevMultiplayerMixin"
+	],
 	"injectors": {
 		"defaultRequire": 1
 	},

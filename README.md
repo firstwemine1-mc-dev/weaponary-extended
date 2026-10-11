@@ -208,3 +208,7 @@ Abilities and status effects (same behaviour as 1.21.1, except where noted):
   `ThrownWeaponRenderer` gets the item renderer from `Minecraft.getInstance()`.
 - New lang keys (tooltips, effects, death messages, messages) were added to `src/main/generated` by hand,
   copied from the 1.18.2 branch's datagen output.
+- **Dev multiplayer:** the 1.16.5 client asks Mojang's social-interactions service whether it may join servers
+  and chat, and that service turns the offline dev account away ("Multiplayer is disabled"). The client-only
+  `mixin/client/DevMultiplayerMixin` allows both, but only when `FabricLoader.isDevelopmentEnvironment()`, so
+  `runClient`/`runClient2` can join the dev server. Normal installs are unaffected.
