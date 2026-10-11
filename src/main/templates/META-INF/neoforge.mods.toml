@@ -26,3 +26,6 @@ type="required"
 versionRange="${minecraft_version_range}"
 ordering="NONE"
 side="${neoforge_minecraft_side}"
+
+[[mixins]]
+config="weaponry.mixins.json"
