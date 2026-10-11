@@ -1,0 +1,95 @@
+package net.firstwemine1.weaponry.item;
+
+import java.util.List;
+
+import org.jetbrains.annotations.Nullable;
+
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.UseAnim;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
+import net.minecraft.world.item.component.Tool;
+import net.minecraft.world.level.Level;
+
+/**
+ * A weapon's passive and active abilities. Each {@link WeaponType} holds one instance;
+ * {@link WeaponItem} and the mixins forward to these hooks. Every hook defaults to "no effect".
+ *
+ * <p>Abilities scale with {@link WeaponMaterial#abilityStrength()} where the design sheet says so.
+ */
+public interface WeaponAbility {
+	WeaponAbility NONE = new WeaponAbility() {
+	};
+
+	/** English tooltip lines; datagen turns them into {@code tooltip.weaponry.<type>.<n>}. */
+	default List<String> description() {
+		return List.of();
+	}
+
+	/** Extra attribute modifiers on top of damage, speed and reach. */
+	default void addAttributes(ItemAttributeModifiers.Builder builder, WeaponMaterial material) {
+	}
+
+	/** A tool component that lets the weapon mine, or {@code null} for none (sword-like). */
+	@Nullable
+	default Tool tool(WeaponTier tier) {
+		return null;
+	}
+
+	/** Disables a blocking shield for 5 s, like an axe. */
+	default boolean disablesShields() {
+		return false;
+	}
+
+	/** Whether a jumping hit can be a critical hit. */
+	default boolean allowsCrits() {
+		return true;
+	}
+
+	/** Fraction (0-1) of the target's armor ignored by a player's melee hit. */
+	default float armorPierce(WeaponMaterial material) {
+		return 0;
+	}
+
+	/**
+	 * Extra melee damage, added before the critical multiplier. {@code damage} is the base damage
+	 * already scaled by attack charge. Runs on both sides; only the server result counts.
+	 */
+	default float attackDamageBonus(WeaponItem weapon, LivingEntity attacker, Entity target, float damage) {
+		return 0;
+	}
+
+	/** Called server-side after a melee hit lands. */
+	default void onHit(ItemStack stack, LivingEntity target, LivingEntity attacker) {
+	}
+
+	/** Called server-side when this weapon, thrown, hits a living target and damages it. */
+	default void onThrownHit(ItemStack stack, LivingEntity target, LivingEntity owner) {
+	}
+
+	/** Right-click. Return {@code pass} to fall through to vanilla behaviour. */
+	default InteractionResultHolder<ItemStack> onUse(Level level, Player player, InteractionHand hand) {
+		return InteractionResultHolder.pass(player.getItemInHand(hand));
+	}
+
+	default UseAnim useAnimation() {
+		return UseAnim.NONE;
+	}
+
+	/** How long the item can be held in use, in ticks. */
+	default int useDuration() {
+		return 0;
+	}
+
+	/** Use released before {@link #useDuration()} ran out. */
+	default void onReleaseUsing(ItemStack stack, Level level, LivingEntity user, int remainingTicks) {
+	}
+
+	/** Use held for the full {@link #useDuration()}. */
+	default void onFinishUsing(ItemStack stack, Level level, LivingEntity user) {
+	}
+}
