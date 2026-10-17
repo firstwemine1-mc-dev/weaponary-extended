@@ -33,6 +33,22 @@ minecraft {
             property 'forge.enabledGameTestNamespaces', mod_id
         }
 
+        // Multiplayer testing on one PC: runServer uses run/, each client gets its own folder and name,
+        // so all three can run at once without fighting over options and log files.
+        // The username lives only on the children: a parent's args are copied into them, and a second
+        // --username makes the game exit on launch.
+        client1 {
+            parent runs.client
+            workingDirectory project.file('run/client1')
+            args '--username', 'Player1'
+        }
+
+        client2 {
+            parent runs.client
+            workingDirectory project.file('run/client2')
+            args '--username', 'Player2'
+        }
+
         server {
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
