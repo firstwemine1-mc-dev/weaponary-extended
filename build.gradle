@@ -25,8 +25,19 @@ neoForge {
     version = project.neo_version
 
     runs {
+        // Multiplayer testing on one PC: runServer uses run/, each client gets its own folder and name,
+        // so all three can run at once without fighting over options and log files.
         client {
             client()
+            gameDirectory = project.file('run/client1')
+            programArguments.addAll '--username', 'Player1'
+            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+        }
+
+        client2 {
+            client()
+            gameDirectory = project.file('run/client2')
+            programArguments.addAll '--username', 'Player2'
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
