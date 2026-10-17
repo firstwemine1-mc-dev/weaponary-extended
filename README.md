@@ -181,5 +181,5 @@ Abilities and status effects (ported from the 1.21.1 baseline through 1.21.11, 2
   lance charge, parry, war hammer smash) goes through `Abilities.knockback` with the attacker's melee source
   and no damage. Tag datagen adds items by registry key.
 - 26.3: a thrown weapon bounces off through `deflect(..., Vec3)` only when the target takes projectile side
-  effects (`projectileReceivesSideEffectsOnHit`), as the trident does; the halberd pull syncs with
-  `needsSync`; `ThrownWeaponRenderer` rotates with `PoseStack.rotateDegrees`.
+  effects (`projectileReceivesSideEffectsOnHit`), as the trident does; the halberd pull sets
+  `syncVelocity` (the renamed `hurtMarked`; `needsSync` alone never reaches a pulled player's own client); `ThrownWeaponRenderer` rotates with `PoseStack.rotateDegrees`.

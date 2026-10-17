@@ -75,7 +75,8 @@ public class HalberdAbility implements WeaponAbility {
 		if (pull.lengthSqr() > 1.0e-6 && resistance < 1.0) {
 			pull = pull.normalize().scale(PULL_SPEED * strength * (1.0 - resistance));
 			target.push(pull.x, PULL_LIFT, pull.z);
-			target.needsSync = true;
+			// push() only syncs to watchers; a player moves itself, so its own client needs the motion too.
+			target.syncVelocity = true;
 		}
 		player.level().playSound(null, target.getX(), target.getY(), target.getZ(),
 				SoundEvents.FISHING_BOBBER_RETRIEVE, SoundSource.PLAYERS, 1.0f, 0.6f);
